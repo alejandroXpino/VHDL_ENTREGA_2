@@ -1,0 +1,29 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+-- Usamos el paquete que definimos antes para los tamaños de bus
+use work.pkg_mem_system.all;
+
+entity rom_mem is
+    port (
+        addr : in  std_logic_vector(ADDR_WIDTH-1 downto 0);
+        data : out std_logic_vector(DATA_WIDTH-1 downto 0)
+    );
+end entity;
+
+architecture rtl of rom_mem is
+    -- Definición de la memoria con los caracteres HI y BYE
+    -- Formato de los bits: (g f e d c b a)
+    constant ROM_DATA : mem_array := (
+        0 => "01110110", -- H
+        1 => "00000110", -- I
+        2 => "00000000", -- Espacio (Apagado)
+        3 => "01111111", -- B (Se muestra como un 8 o b minúscula según segmentos)
+        4 => "01101110", -- Y
+        5 => "01111001", -- E
+        others => "00000000" -- El resto de la memoria apagada
+    );
+begin
+    -- Lectura asíncrona de la ROM
+    data <= ROM_DATA(to_integer(unsigned(addr)));
+end architecture;
